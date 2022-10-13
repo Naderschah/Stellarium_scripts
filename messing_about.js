@@ -40,33 +40,27 @@ function iterate_through(functional, start_val, end_val, steps, time_taken)
     return;
 }
 
-// https://codereview.stackexchange.com/questions/224931/convert-a-string-like-4h53m12s-to-a-total-number-of-seconds-in-javascript
 function durationSeconds(timeExpr)
 {
-	var units = {'h': 3600, 'm': 60, 's': 1};
-	var regex = /(\d+)([hms])/g;
-
-	let seconds = 0;
-	var match;
-	while ((match = regex.exec(timeExpr))) 
-	{
-		seconds += parseInt(match[1]) * units[match[2]];
-	}
-
-	return seconds;
+    hours = int(timeExpr.split("h")[0]);
+    minutes = int(timeExpr.split("h")[1].split("m")[0]);
+    seconds = int(timeExpr.split("h")[1].split("m")[1].split("s")[0]);
+	
+    total = hours * 3600 + minutes * 60 + seconds;
+	return total;
 }
 
 
-function waitForTime(time, duration = 10)
+function waitForTime(time, duration)
 {
-    core.moveToAltAzi(alt=90 , azi=0,duration=1)
-    StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1)
-    LandscapeMgr.setFlagAtmosphere(false)
-    LandscapeMgr.setFlagLandscape(true)
-    time_rate = durationSeconds(StelMainScriptAPI.getDeltaT(time)) / duration
-    StelMainScriptAPI.setTimeRate(time_rate)
-    core.waitFor(time)
-    StelMainScriptAPI.setTimeRate(1)
+    core.moveToAltAzi(alt=90 , azi=0,duration=1);
+    StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1);
+    LandscapeMgr.setFlagAtmosphere(false);
+    LandscapeMgr.setFlagLandscape(true);
+    time_rate = durationSeconds(StelMainScriptAPI.getDeltaT(time)) / duration;
+    core.setTimeRate(time_rate);
+    core.waitFor(time);
+    core.setTimeRate(1);
 }
 // Image function
 // Apparently horizontal projection works on dome -- See if this is required as this was not related to the function used
@@ -118,7 +112,7 @@ function display_image_tripple(image_path, id)
 }
 
 
-// Also useful
+// Make everything red
 // core.setNightMode(true)
 
 // Debug message on screen
@@ -135,9 +129,13 @@ function display_image_tripple(image_path, id)
 // ProjectionOrthographic
 // ProjectionSinusoidal
 // ProjectionMiller
+
+// Overhead
+
 core.setProjectionMode('ProjectionFisheye')
 core.setDiskViewport(true)
 core.setGuiVisible(false)
+
 
 // Software to create profiles: https://fly.elise-ng.net/blog/create-your-own-planetarium-with-stellarium/
 
@@ -162,7 +160,8 @@ core.debug("Starting Moonphase Iteration")
 // Show all moon phase 
 LandscapeMgr.setFlagAtmosphere(false)
 LandscapeMgr.setFlagLandscape(false)
-
+// It takes a second for the ground to change
+core.wait(1)
 core.setDate("2022-09-25T23:54:00")
 
 core.selectObjectByName("Moon",pointer = false)
@@ -170,7 +169,7 @@ core.moveToSelectedObject(duration=1)
 
 StelMovementMgr.zoomTo(aimFov=2.21, zoomDuration=1)
 jd = core.getJDay()
-for (let h = 0; h <= 14; h++)
+for (h = 0; h <= 14; h++)
 {
     core.setJDay(jd + h)
     core.moveToSelectedObject(duration=0)
@@ -183,8 +182,8 @@ core.moveToSelectedObject(duration=0)
 // TODO Add video and images with the 3 image function and make 3 video function and whole dome function
 
 // TODO Show the group
-// Light pollution presentation : Make phone show different colors of light to show while focused on the milky way with atmosphere on
-LandscapeMgr.setFlagAtmosphere(true)
+// Light pollution presentation : Make phone show different colors of light to show while focused on the milky way, atmosphere has to be off as the sun will interfere
+LandscapeMgr.setFlagAtmosphere(false)
 LandscapeMgr.setFlagLandscape(false)
 
 core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
@@ -201,6 +200,11 @@ LandscapeMgr.setFlagLandscape(false)
 core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
 StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
 
+
+// Sample images
+// planetarium/Bensersiel_EAST_IMG_6442.jpg
+
+display_image_tripple("planetarium/Bensersiel_EAST_IMG_6442.jpg", "Bensersiel_EAST_IMG_6442")
 
 
 // Get rid of all images
