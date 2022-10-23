@@ -151,6 +151,8 @@ SolarSystem.setFlagPlanets(true)
 SolarSystem.setFlagTrails(false)
 SolarSystem.setFlagLabels(false)
 StarMgr.setFlagLabels(false)
+core.setObserverLocation(name='Groningen')
+core.setMountMode("azimuthal")
 
 // Look up at daytime
 //LandscapeMgr.setFlagAtmosphere(true)
@@ -169,6 +171,8 @@ pause()
 
 //          Moonphases
 core.debug("Moonphase Section")
+//core.setObserverLocation(name='South Pole Telescope')
+//core.debug(core.getObserverLocation())
 waitForTime('2022-09-25T22:00:00', 5)
 pause()
 
@@ -176,16 +180,21 @@ pause()
 core.debug("- Starting Moonphase Iteration")
 LandscapeMgr.setFlagLandscape(false)
 core.wait(1)
+core.setMountMode("equatorial")
 waitForTime("2022-09-25T23:54:00",5, change_cond=false)
 // Focus on moon TODO: Find nicer way to do this full screen
 core.selectObjectByName("Moon",pointer = false)
 core.moveToSelectedObject(duration=1)
+StelMovementMgr.zoomTo(aimFov=52.5, zoomDuration=1)
 jd = core.getJDay()
-for (h = 0; h <= 14; h++)
+days = 14
+time_in_s = 28
+steps = 1000
+for (h = 0; h <= days*steps; h++)
 {
-    core.setJDay(jd + h)
-    core.moveToSelectedObject(duration=0)
-    core.wait(1)
+    core.setJDay(jd + h/steps)
+    core.moveToSelectedObject(duration=time_in_s/2/14/steps)
+    core.wait(time_in_s/2/14/steps)
 }
 core.setDate("2022-10-09T22:54:00")
 core.moveToSelectedObject(duration=0)
@@ -200,11 +209,14 @@ core.selectObjectByName("Moon",pointer = false)
 core.moveToSelectedObject(duration=1)
 StelMovementMgr.zoomTo(aimFov=2.21, zoomDuration=1)
 jd = core.getJDay()
-for (h = 0; h <= 28; h++)
+days = 14
+time_in_s = 28
+steps = 1000
+for (h = 0; h <= days*steps; h++)
 {
-    core.setJDay(jd + h/2)
-    core.moveToSelectedObject(duration=0)
-    core.wait(1)
+    core.setJDay(jd + h/steps)
+    core.moveToSelectedObject(duration=time_in_s/2/14/steps)
+    core.wait(time_in_s/2/14/steps)
 }
 core.setDate("2022-10-09T22:54:00")
 core.moveToSelectedObject(duration=0)
@@ -217,6 +229,7 @@ core.debug("Astronomy Moon Section")
 // Time filler
 LandscapeMgr.setFlagAtmosphere(false)
 LandscapeMgr.setFlagLandscape(false)
+core.setMountMode("azimuthal")
 core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
 StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
 
