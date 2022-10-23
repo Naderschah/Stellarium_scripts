@@ -1,0 +1,307 @@
+// This script assumes default settings for stellarium
+// It gets better if one downloads all star catalogs available (there is 9 in total)
+
+
+
+// Function definitions
+
+// pause : pause the script, continues with .
+// iterate_through (functional:fn, start_val:int, end_val:int, steps:int, time_taken:float) : iterates function with params
+// durationSeconds(timeExpr:str) : converts time string to seconds
+// waitForTime(time:str, duration:float) : waits for time to pass
+// display_image_tripple(image_path:str, id:str) : displays image tripple with ids _0 _1 _2
+// displayVideo_dome(video_path:str, id:str, length:float) : displays video on full dome
+// 
+
+
+function pause()
+{
+    var oldEquator = GridLinesMgr.getFlagEquatorLine();
+    var pauseLabel = LabelMgr.labelScreen(">>", 
+                                          core.getScreenWidth() - 50,
+                                          core.getScreenHeight() - 50);
+    while (oldEquator == GridLinesMgr.getFlagEquatorLine())
+    {
+        core.wait(0.1);
+    }
+    GridLinesMgr.setFlagEquatorLine(oldEquator);
+    LabelMgr.deleteLabel(pauseLabel);
+    core.debug("Finished Pause")
+    return;
+}
+
+function iterate_through(functional, start_val, end_val, steps, time_taken)
+{
+    var step_size = (end_val - start_val) / steps;
+    var current_val = start_val;
+    var i = 0;
+    while (i < steps)
+    {
+        functional(current_val);
+        core.wait(time_taken / steps);
+        current_val += step_size;
+        i++;
+    }
+    return;
+}
+
+function durationSeconds(timeExpr)
+{
+    hours = (timeExpr.split("h")[0]);
+    minutes = (timeExpr.split("h")[1].split("m")[0]);
+    seconds = (timeExpr.split("h")[1].split("m")[1].split("s")[0]);
+	
+    total = hours * 3600 + minutes * 60 + seconds;
+	return total;
+}
+
+// Get time difference (does not consider days)
+function waitForTime(time, duration, change_cond = true)
+{
+    core.moveToAltAzi(alt=90 , azi=0,duration=1);
+    StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1);
+    if (change_cond)
+    {
+        LandscapeMgr.setFlagAtmosphere(false);
+        LandscapeMgr.setFlagLandscape(true);
+    }
+    time_rate = durationSeconds(core.getDeltaT(time)) / duration;
+    core.setTimeRate(time_rate);
+    core.waitFor(time);
+    core.setTimeRate(1);
+}
+// Image function
+function display_image_tripple(image_path, id)
+{
+    rotation = [0, 120, 240]
+    core.loadSkyImage( id =id+'_0',
+		filename = image_path,
+	 	// In degrees
+        lon = 0,
+		lat = 35,
+        // angular size in arcmin
+		angSize = 2160, // 1/21600 turns = 1 arcmin
+		rotation = 0,
+		minRes = 2.5,
+		maxBright = 5,
+		visible = true,
+		frame = "AzAlt",
+		withAberration = true 
+	)
+    core.loadSkyImage( id =id+'_1',
+		filename = image_path,
+	 	// In degrees
+        lon = 120,
+		lat = 35,
+        // angular size in arcmin
+		angSize = 2160, // 1/21600 turns = 1 arcmin
+		rotation = 0,
+		minRes = 2.5,
+		maxBright = 5,
+		visible = true,
+		frame = "AzAlt",
+		withAberration = true 
+	)
+    core.loadSkyImage( id =id+'_2',
+		filename = image_path,
+	 	// In degrees
+        lon = 240,
+		lat = 35,
+        // angular size in arcmin
+		angSize = 2160, // 1/21600 turns = 1 arcmin
+		rotation = 0,
+		minRes = 2.5,
+		maxBright = 5,
+		visible = true,
+		frame = "AzAlt",
+		withAberration = true 
+	)
+}
+
+
+//Whole dome video
+function displayVideo_dome(video_path, id,length=false)
+{
+    core.loadVideo( filename=video_path,
+                    id =id,
+                    x = 0,
+                    y = 0,)
+    //resize to full view port
+    core.resizeVideo(id = id, width = 1, height = 1)
+    // Get length to play
+    if (length == false)
+    {
+        length = core.getVideoDuration(id = id)
+    }
+    core.wait(length)
+    core.stopVideo(id = id)
+}
+
+
+
+// Overhead
+
+
+core.setProjectionMode('ProjectionFisheye')
+core.setDiskViewport(true)
+core.setGuiVisible(false)
+LandscapeMgr.setFlagCardinalPoints(false)
+MeteorShowers.setEnableMarker(false)
+SolarSystem.setFlagPlanets(true)
+SolarSystem.setFlagTrails(false)
+SolarSystem.setFlagLabels(false)
+StarMgr.setFlagLabels(false)
+
+// Look up at daytime
+//LandscapeMgr.setFlagAtmosphere(true)
+//LandscapeMgr.setFlagLandscape(true)
+StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1)
+core.moveToAltAzi(alt=90 , azi=0,duration=1)
+
+
+
+//          Intro
+// TODO: Find good date 
+core.setDate("2022-09-25T12:54:00")
+pause()
+
+// TODO: Look into 3D models and see if we can get a sample of the candle going
+
+//          Moonphases
+core.debug("Moonphase Section")
+waitForTime('2022-09-25T22:00:00', 5)
+pause()
+
+
+core.debug("- Starting Moonphase Iteration")
+LandscapeMgr.setFlagLandscape(false)
+core.wait(1)
+waitForTime("2022-09-25T23:54:00",5, change_cond=false)
+// Focus on moon TODO: Find nicer way to do this full screen
+core.selectObjectByName("Moon",pointer = false)
+core.moveToSelectedObject(duration=1)
+jd = core.getJDay()
+for (h = 0; h <= 14; h++)
+{
+    core.setJDay(jd + h)
+    core.moveToSelectedObject(duration=0)
+    core.wait(1)
+}
+core.setDate("2022-10-09T22:54:00")
+core.moveToSelectedObject(duration=0)
+
+pause()
+
+// Iterate with focus on moon
+core.debug("- Starting Moonphase Iteration with focus")
+core.wait(1)
+core.setDate("2022-09-25T23:54:00")
+core.selectObjectByName("Moon",pointer = false)
+core.moveToSelectedObject(duration=1)
+StelMovementMgr.zoomTo(aimFov=2.21, zoomDuration=1)
+jd = core.getJDay()
+for (h = 0; h <= 28; h++)
+{
+    core.setJDay(jd + h/2)
+    core.moveToSelectedObject(duration=0)
+    core.wait(1)
+}
+core.setDate("2022-10-09T22:54:00")
+core.moveToSelectedObject(duration=0)
+
+pause()
+
+//      Astronomy moon
+core.debug("Astronomy Moon Section")
+
+// Time filler
+LandscapeMgr.setFlagAtmosphere(false)
+LandscapeMgr.setFlagLandscape(false)
+core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
+StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
+
+pause()
+// TODO: See if we can show individual stars through telescopes
+
+
+//      Milky Way
+core.debug("Milky Way Section")
+
+// TODO: Might have to add this here if we do other stuff for moon part
+
+
+//      North Star
+core.debug("North Star Section")
+
+// Show big dipper
+LandscapeMgr.setFlagAtmosphere(true)
+core.selectObjectByName("Big Dipper (Plough)",pointer = false)
+core.moveToSelectedObject(duration=1)
+StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
+// TODO keep in?
+ConstellationMgr.setFlagArt(true)
+ConstellationMgr.setArtIntensity(0.1)
+
+pause()
+// Show north star
+LandscapeMgr.setFlagCardinalPoints(true)
+core.selectObjectByName("Polaris",pointer = false)
+core.moveToSelectedObject(duration=1)
+
+pause()
+LandscapeMgr.setFlagCardinalPoints(false)
+
+//       Light Pollution
+core.debug("Light Pollution Section")
+
+ConstellationMgr.setFlagArt(false)
+LandscapeMgr.setFlagLandscape(true)
+core.moveToAltAzi(alt=90 , azi=0,duration=1)
+// Groningen Level
+core.setBortleScaleIndex(6)
+
+pause()
+// Extreme level
+core.setBortleScaleIndex(9)
+
+pause()
+// Show all bortle scale
+core.debug("Starting BortleScale Iteration")
+core.setDate("2008-03-24T22:21:01")
+LandscapeMgr.setFlagAtmosphere(true)
+LandscapeMgr.setFlagLandscape(true)
+StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1)
+core.moveToAltAzi(alt=90 , azi=0,duration=1)
+iterate_through(core.setBortleScaleIndex, 1, 9, 100, 10)
+iterate_through(core.setBortleScaleIndex, 9, 1, 100, 10)
+
+pause()
+//        Satellites : TODO: Check if there is a better way to do this
+Satellites.setFlagHintsVisible(true)
+Satellites.setFlagLabelsVisible(false)
+Satellites.setFlagIconicMode(true)
+
+pause()
+Satellites.setFlagHintsVisible(false)
+Satellites.setFlagLabelsVisible(false)
+Satellites.setFlagIconicMode(false)
+
+//         Light Colour
+core.debug("Light Colour Section")
+// Time filler
+LandscapeMgr.setFlagAtmosphere(false)
+LandscapeMgr.setFlagLandscape(false)
+core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
+StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
+
+pause()
+
+//         More effects TODO:
+core.debug("More Effects Section")
+
+
+
+//         Light Pollution from above
+core.debug("Light Pollution from above Section")
+
+// TODO: Insert Video

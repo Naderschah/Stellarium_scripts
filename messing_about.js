@@ -42,28 +42,30 @@ function iterate_through(functional, start_val, end_val, steps, time_taken)
 
 function durationSeconds(timeExpr)
 {
-    hours = int(timeExpr.split("h")[0]);
-    minutes = int(timeExpr.split("h")[1].split("m")[0]);
-    seconds = int(timeExpr.split("h")[1].split("m")[1].split("s")[0]);
+    hours = (timeExpr.split("h")[0]);
+    minutes = (timeExpr.split("h")[1].split("m")[0]);
+    seconds = (timeExpr.split("h")[1].split("m")[1].split("s")[0]);
 	
     total = hours * 3600 + minutes * 60 + seconds;
 	return total;
 }
 
-
-function waitForTime(time, duration)
+// Get time difference (does not consider days)
+function waitForTime(time, duration, change_cond = true)
 {
     core.moveToAltAzi(alt=90 , azi=0,duration=1);
     StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1);
-    LandscapeMgr.setFlagAtmosphere(false);
-    LandscapeMgr.setFlagLandscape(true);
-    time_rate = durationSeconds(StelMainScriptAPI.getDeltaT(time)) / duration;
+    if (change_cond)
+    {
+        LandscapeMgr.setFlagAtmosphere(false);
+        LandscapeMgr.setFlagLandscape(true);
+    }
+    time_rate = durationSeconds(core.getDeltaT(time)) / duration;
     core.setTimeRate(time_rate);
     core.waitFor(time);
     core.setTimeRate(1);
 }
 // Image function
-// Apparently horizontal projection works on dome -- See if this is required as this was not related to the function used
 function display_image_tripple(image_path, id)
 {
     rotation = [0, 120, 240]
@@ -112,23 +114,75 @@ function display_image_tripple(image_path, id)
 }
 
 
+//TODO: Finish tripple image shower : Not required yet, issue is _1 _2 videos dont play and rotation needs to be added
+function displayVideo_tripple(video_path, id,length=false,width=0.2,wp_width=3840,wp_height=2160)
+{
+    id_0 = id +'_0'
+    id_1 = id +'_1'
+    id_2 = id +'_2'
+    core.loadVideo( filename=video_path,
+                    id =id_0,
+                    x = wp_width/2*(1-width),
+                    y = wp_height*1/6)
+    core.loadVideo( filename=video_path,
+                    id =id_1,
+                    x = wp_width/3*(1-width),
+                    y = wp_height*5/6)
+    core.loadVideo( filename=video_path,
+                    id =id_2,
+                    x = wp_width*2/3*(1-width),
+                    y = wp_height*5/6)
+    
+    // Get aspect ratio to maintain
+    _width=StelVideoMgr.getVideoResolution(id_0).width
+    _height=StelVideoMgr.getVideoResolution(id_0).height
+    aspect_ratio = _height/_width
+    core.resizeVideo(id_0, width =width, height = aspect_ratio*width)
+    core.resizeVideo(id_1, width =width, height = aspect_ratio*width)
+    core.resizeVideo( id_2, width =width, height = aspect_ratio*width)
+    // Get length to play
+    if (length == false)
+    {
+        length = core.getVideoDuration(id_0)
+    }
+    length=5
+    core.wait(length)
+    core.stopVideo(id_0)
+    core.stopVideo(id_1)
+    core.stopVideo(id_2)
+}
+core.moveToAltAzi(alt=90 , azi=0,duration=1)
+displayVideo_tripple(video_path='movies/lichtvervuiling_stad_1.mp4', id='trials')
+
+
+
+//Whole dome video
+function displayVideo_dome(video_path, id,length=false)
+{
+    core.loadVideo( filename=video_path,
+                    id =id,
+                    x = 0,
+                    y = 0,)
+    //resize to full view port
+    core.resizeVideo(id = id, width = 1, height = 1)
+    // Get length to play
+    if (length == false)
+    {
+        length = core.getVideoDuration(id = id)
+    }
+    core.wait(length)
+    core.stopVideo(id = id)
+}
+
+
+
+
 // Make everything red
 // core.setNightMode(true)
 
 // Debug message on screen
 // LabelMgr.labelScreen("Hello Universe", 200, 200, true, 20, "#ff0000");
 
-// projection modes:
-// ProjectionPerspective
-// ProjectionEqualArea
-// ProjectionStereographic
-// ProjectionFisheye
-// ProjectionHammer
-// ProjectionCylinder
-// ProjectionMercator
-// ProjectionOrthographic
-// ProjectionSinusoidal
-// ProjectionMiller
 
 // Overhead
 
@@ -178,8 +232,6 @@ for (h = 0; h <= 14; h++)
 core.setDate("2022-10-09T22:54:00")
 core.moveToSelectedObject(duration=0)
 
-
-// TODO Add video and images with the 3 image function and make 3 video function and whole dome function
 
 // TODO Show the group
 // Light pollution presentation : Make phone show different colors of light to show while focused on the milky way, atmosphere has to be off as the sun will interfere
