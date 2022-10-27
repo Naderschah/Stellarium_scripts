@@ -1,3 +1,6 @@
+On Ubuntu 22.04 with a self compiled, I dont really understand whyt but there is an install in usr, ~/.stellarium, and in Downloads. The only easily usable path was in Downloads for some reason. Its important that this gets figured out for windows and recorded.
+
+
 This is dedicated to script snippets and presentation script for a mobile planetarium utilizing a fish eye lens and a large beamer. 
 
 messing_about.js --> contains random code snippets with comments for what they do, should include all script snippets (and more) found in this repository
