@@ -56,8 +56,11 @@ function durationSeconds(timeExpr)
 }
 
 // Get time difference (does not consider days)
-function waitForTime(time, duration, change_cond = true)
-{
+function waitForTime(time, duration, change_cond)
+{   
+    if(change_cond === undefined) {
+        change_cond = true;
+    }
     core.moveToAltAzi(alt=90 , azi=0,duration=1);
     StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1);
     if (change_cond)
@@ -120,12 +123,15 @@ function display_image_tripple(image_path, id)
 
 
 //Whole dome video
-function displayVideo_dome(video_path, id,length=false)
-{
+function displayVideo_dome(video_path, id,length)
+{   
+    if(length === undefined) {
+        length = false;
+    }
     core.loadVideo( filename=video_path,
                     id =id,
                     x = 0,
-                    y = 0,)
+                    y = 0);
     //resize to full view port
     core.resizeVideo(id = id, width = 1, height = 1)
     // Get length to play

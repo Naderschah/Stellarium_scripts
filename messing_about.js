@@ -115,8 +115,20 @@ function display_image_tripple(image_path, id)
 
 
 //TODO: Finish tripple image shower : Not required yet, issue is _1 _2 videos dont play and rotation needs to be added
-function displayVideo_tripple(video_path, id,length=false,width=0.2,wp_width=3840,wp_height=2160)
-{
+function displayVideo_tripple(video_path, id,length,width,wp_width,wp_height)
+{   
+    if(length === undefined) {
+        length = false;
+     }
+    if(width === undefined) {
+        width = 0.2;
+     }
+     if(wp_width === undefined) {
+        wp_width = 3840;
+     }
+     if(wp_height === undefined) {
+        length = 2160;
+     }
     id_0 = id +'_0'
     id_1 = id +'_1'
     id_2 = id +'_2'
@@ -157,8 +169,11 @@ displayVideo_tripple(video_path='movies/lichtvervuiling_stad_1.mp4', id='trials'
 
 
 //Whole dome video
-function displayVideo_dome(video_path, id,length=false)
-{
+function displayVideo_dome(video_path, id,length)
+{   
+    if(length === undefined) {
+        length = false;
+     }
     core.loadVideo( filename=video_path,
                     id =id,
                     x = 0,
