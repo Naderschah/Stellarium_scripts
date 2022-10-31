@@ -191,7 +191,7 @@ waitForTime("2022-09-25T23:54:00",5, change_cond=false)
 // Focus on moon TODO: Find nicer way to do this full screen
 core.selectObjectByName("Moon",pointer = false)
 core.moveToSelectedObject(duration=1)
-StelMovementMgr.zoomTo(aimFov=52.5, zoomDuration=1)
+StelMovementMgr.zoomTo(aimFov=45.5, zoomDuration=1)
 jd = core.getJDay()
 days = 14
 time_in_s = 28
@@ -216,8 +216,8 @@ core.moveToSelectedObject(duration=1)
 StelMovementMgr.zoomTo(aimFov=2.21, zoomDuration=1)
 jd = core.getJDay()
 days = 14
-time_in_s = 28
-steps = 1000
+time_in_s = 28*2
+steps = 40
 for (h = 0; h <= days*steps; h++)
 {
     core.setJDay(jd + h/steps)
@@ -231,6 +231,7 @@ pause()
 
 //      Astronomy moon
 core.debug("Astronomy Moon Section")
+
 
 // Time filler
 LandscapeMgr.setFlagAtmosphere(false)
@@ -305,7 +306,7 @@ Satellites.setFlagHintsVisible(false)
 Satellites.setFlagLabelsVisible(false)
 Satellites.setFlagIconicMode(false)
 
-//         Light Colour
+//         Light Colour TODO: Add the colored images
 core.debug("Light Colour Section")
 // Time filler
 LandscapeMgr.setFlagAtmosphere(false)
@@ -317,10 +318,10 @@ pause()
 
 //         More effects TODO:
 core.debug("More Effects Section")
-
+displayVideo_dome(video_path="earth_frames.mp4",id='bird_video')
 
 
 //         Light Pollution from above
 core.debug("Light Pollution from above Section")
-
 // TODO: Insert Video
+displayVideo_dome(video_path="earth_frames.mp4",id='bird_video')
