@@ -119,6 +119,8 @@ function display_image_tripple(image_path, id)
 		frame = "AzAlt",
 		withAberration = true 
 	)
+    core.debug('ID value ')
+    core.debug(id)
 }
 
 
@@ -191,7 +193,7 @@ waitForTime("2022-09-25T23:54:00",5, change_cond=false)
 // Focus on moon TODO: Find nicer way to do this full screen
 core.selectObjectByName("Moon",pointer = false)
 core.moveToSelectedObject(duration=1)
-StelMovementMgr.zoomTo(aimFov=45.5, zoomDuration=1)
+StelMovementMgr.zoomTo(aimFov=40.5, zoomDuration=1)
 jd = core.getJDay()
 days = 14
 time_in_s = 28
@@ -221,8 +223,8 @@ steps = 40
 for (h = 0; h <= days*steps; h++)
 {
     core.setJDay(jd + h/steps)
-    core.moveToSelectedObject(duration=time_in_s/2/14/steps)
-    core.wait(time_in_s/2/14/steps)
+    core.moveToSelectedObject(duration=time_in_s/2/days/steps)
+    core.wait(time_in_s/2/days/steps)
 }
 core.setDate("2022-10-09T22:54:00")
 core.moveToSelectedObject(duration=0)
@@ -306,17 +308,27 @@ Satellites.setFlagHintsVisible(false)
 Satellites.setFlagLabelsVisible(false)
 Satellites.setFlagIconicMode(false)
 
-//         Light Colour TODO: Add the colored images
+//         Light Colour TODO: Add the colored images --- what did team say?
 core.debug("Light Colour Section")
 // Time filler
 LandscapeMgr.setFlagAtmosphere(false)
 LandscapeMgr.setFlagLandscape(false)
 core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
 StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
-
+core.debug("This is what would be the background, on . it will change to what is possible with the color")
+pause()
+core.debug('displaying blue image')
+core.moveToAltAzi(alt=90 , azi=0,duration=1);
+display_image_tripple(image_path='blue.jpeg', id='blue')
+pause()
+// ScreenImageMgr.deleteAllImages()
+core.removeSkyImage(id='blue'+'_0')
+core.removeSkyImage(id='blue'+'_0_1')
+core.removeSkyImage(id='blue'+'_0_1_2')
 pause()
 
-//         More effects TODO:
+
+//         More effects TODO: Add the bird videos -- in zip broken
 core.debug("More Effects Section")
 displayVideo_dome(video_path="earth_frames.mp4",id='bird_video')
 
