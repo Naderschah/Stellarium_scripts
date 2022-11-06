@@ -12,5 +12,9 @@ KIT_script.ssc --> Script for KIT project related presentation.
 
 
 
+
+When using windows, it is common that dpi scaling is applied to a 4k monitor (or beamer) this makes the display in stellarium look very grainy, make sure to turn it off (allthough do check it might get the beamer to look a little more focused through oversharpening)
+
+
 TODO:
 - Add functionality to go forward and backward with a list of functions and another marker like in pause - figure out how to interrupt started scripts
