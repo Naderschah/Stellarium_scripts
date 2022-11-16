@@ -1,0 +1,37 @@
+//
+// Name: Sky Brightness Iteration Bortle x -> 9
+// Author: Felix Semler
+// License: Public Domain
+// Version: 1.0
+// Description: Iterates through bortle scale from current to final value, where final value is given in the file name (takes ~30s) - no overhead is done here
+//
+
+
+function iterate_through(functional, start_val, end_val, steps, time_taken)
+{
+    var step_size = (end_val - start_val) / steps;
+    var current_val = start_val;
+    var i = 0;
+    while (i < steps)
+    {
+        functional(current_val);
+        core.wait(time_taken / steps);
+        current_val += step_size;
+        i++;
+    }
+    return;
+}
+
+function durationSeconds(timeExpr)
+{
+    hours = (timeExpr.split("h")[0]);
+    minutes = (timeExpr.split("h")[1].split("m")[0]);
+    seconds = (timeExpr.split("h")[1].split("m")[1].split("s")[0]);
+	
+    total = hours * 3600 + minutes * 60 + seconds;
+	return total;
+}
+
+
+core.debug("Starting BortleScale Iteration")
+iterate_through(core.setBortleScaleIndex, core.getBortleScaleIndex(), 9, 100, 30)

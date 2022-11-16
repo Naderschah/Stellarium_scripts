@@ -12,6 +12,17 @@ KIT_script.ssc --> Script for KIT project related presentation.
 
 
 
+Decided to use stellarium console on the side to ease usability, later found the web plugin 
+
+The idea is that the web plugin be used to apply scripts as the console plugin does not allow to run custom scripts
+
+Everything else can be handled from there
+
+It may also be useful to make a qt widget that creates a console like behavior connecting to the port, this would allow to create custom screens for each presentation in qt designer by simply associating the correct urls through one central class --Future things
+
+
+
+
 
 When using windows, it is common that dpi scaling is applied to a 4k monitor (or beamer) this makes the display in stellarium look very grainy, make sure to turn it off (allthough do check it might get the beamer to look a little more focused through oversharpening)
 

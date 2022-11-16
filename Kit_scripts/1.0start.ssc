@@ -1,0 +1,12 @@
+//
+// Name: Sets starting conditions
+// Author: Felix Semler
+// License: Public Domain
+// Version: 1.0
+// Description: Daytime starting 
+//
+
+
+StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1)
+core.moveToAltAzi(alt=90 , azi=0,duration=1)
+core.setDate("2022-09-26T12:54:00")

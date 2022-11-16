@@ -1,0 +1,30 @@
+//
+// Name: Make night
+// Author: Felix Semler
+// License: Public Domain
+// Version: 1.0
+// Description: Increases time speed until night (12pm) is reached this takes ~60 sec 
+//
+
+
+
+// Get time difference (does not consider days)
+function waitForTime(time, duration)
+{   
+    date = time.split('T')[0].split('-')
+    final_dt = new Date(date[0],date[1],date[2],23,59,59)
+    start_split = core.getDate().split('T')
+    sdate = start_split[0].split('-')
+    stime = start_split[1].split(':')
+    start_dt = new Date(sdate[0],sdate[1],sdate[2],stime[0],stime[1],stime[2])
+    time_to_wait = (final_dt-start_dt)/1000
+
+    time_rate = time_to_wait / duration;
+    core.setTimeRate(time_rate);
+    core.waitFor(time);
+    core.setTimeRate(1);
+
+}
+
+
+waitForTime(core.getDate().split('T')[0]+'T17:00:00', 60)

@@ -1,0 +1,61 @@
+//
+// Name: Moonphase Iteration
+// Author: Felix Semler
+// License: Public Domain
+// Version: 1.0
+// Description: Follows the moon with an FoV: 40.5 over the period of a month 
+//
+
+
+
+
+function durationSeconds(timeExpr)
+{
+    hours = (timeExpr.split("h")[0]);
+    minutes = (timeExpr.split("h")[1].split("m")[0]);
+    seconds = (timeExpr.split("h")[1].split("m")[1].split("s")[0]);
+	
+    total = hours * 3600 + minutes * 60 + seconds;
+	return total;
+}
+
+function waitForTime(time, duration, change_cond)
+{   
+    if(change_cond === undefined) {
+        change_cond = true;
+    }
+    core.moveToAltAzi(alt=90 , azi=0,duration=1);
+    StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1);
+    if (change_cond)
+    {
+        LandscapeMgr.setFlagAtmosphere(false);
+        LandscapeMgr.setFlagLandscape(true);
+    }
+    time_rate = durationSeconds(core.getDeltaT(time)) / duration;
+    core.setTimeRate(time_rate);
+    core.waitFor(time);
+    core.setTimeRate(1);
+}
+
+core.debug("- Starting Moonphase Iteration")
+core.debug("Remember to follow moon")
+LandscapeMgr.setFlagLandscape(false)
+LandscapeMgr.setFlagAtmosphere(false)
+core.wait(1)
+core.setMountMode("equatorial")
+// Focus on moon : Doesnt work in 0.18.2 
+// core.selectObjectByName("Moon",pointer = false)
+// core.moveToSelectedObject(duration=1)
+// StelMovementMgr.moveToObject("Moon",moveDuration = 1)
+// StelMovementMgr.zoomTo(aimFov=40.5, zoomDuration=1)
+jd = core.getJDay()
+days = 14
+time_in_s = 28
+steps = 1000
+for (h = 0; h <= days*steps; h++)
+{
+    core.setJDay(jd + h/steps)
+    //core.moveToSelectedObject(duration=time_in_s/2/14/steps)
+    core.wait(time_in_s/14/steps)
+}
+//core.moveToSelectedObject(duration=0)

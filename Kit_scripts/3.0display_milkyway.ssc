@@ -1,0 +1,14 @@
+//
+// Name: Display Milkyway
+// Author: Felix Semler
+// License: Public Domain
+// Version: 1.0
+// Description: Display milky way around the sides of the planetarium 
+//
+
+
+LandscapeMgr.setFlagAtmosphere(false)
+LandscapeMgr.setFlagLandscape(false)
+core.setMountMode("azimuthal")
+core.moveToRaDec(10.645161849141573, -28.503793265228694, duration=1)
+StelMovementMgr.zoomTo(aimFov=235, zoomDuration=1)
