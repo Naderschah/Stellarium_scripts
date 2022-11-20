@@ -3,28 +3,59 @@
 // Author: Felix Semler
 // License: Public Domain
 // Version: 1.0
-// Description: Increases time speed until the fullmoon occures
+// Description: Increases time speed until midday skips days to fullmoon and then goes night
 //
 
 // Note that time in stellarium is usually utc+2 for me this takes utc+0
 
-function waitForTime(time, duration)
-{   
-    date = time.split('T')[0].split('-')
-    final_dt = new Date(date[0],date[1],date[2],23,59,59)
-    start_split = core.getDate().split('T')
-    sdate = start_split[0].split('-')
-    stime = start_split[1].split(':')
-    start_dt = new Date(sdate[0],sdate[1],sdate[2],stime[0],stime[1],stime[2])
-    time_to_wait = (final_dt-start_dt)/1000
 
-    time_rate = time_to_wait / duration;
-    core.setTimeRate(time_rate);
-    core.waitFor(time);
-    core.setTimeRate(1);
-
+function addLeadingZeros(n) 
+{
+    if (n <= 9) {
+      return "0" + n;
+    }
+    return n
 }
 
-// TODO: Make equatorial
+function waitForTime(time, duration, add_day)
+{
+    // Format current and final time to js date objects
+    date_fin = time.split('T')[0].split('-')
+    time_fin = time.split('T')[1].split(':')
+    date_start = core.getDate().split('T')[0].split('-')
+    time_start = core.getDate().split('T')[0].split(':')
 
-waitForTime('2022-10-10T02:59:59', 60)
+    dt_start = new Date(date_start[0],date_start[1],date_start[2],time_start[0],time_start[1],time_start[2])
+    dt_fin = new Date(date_fin[0],date_fin[1],date_fin[2],time_fin[0],time_fin[1],time_fin[2])
+    
+    // Get time rate 
+    time_to_wait = (dt_fin-dt_start)/1000
+    time_rate = time_to_wait / duration
+
+    core.setTimeRate(time_rate);
+    if (add_day===undefined)
+    {
+        core.waitFor(time);
+    }
+    else // In case we just want to go to the next day
+    {
+        core.waitFor(dt_fin.getFullYear()+'-'+addLeadingZeros(dt_fin.getMonth())+'-'+addLeadingZeros(dt_fin.getDate()+1)+'T'+addLeadingZeros(dt_fin.getHours())+':'+addLeadingZeros(dt_fin.getMinutes())+':'+addLeadingZeros(dt_fin.getSeconds()))
+    }
+}
+
+// Make midday
+waitForTime(core.getDate().split('T')[0]+'T06:59:59', 20, true)
+core.debug('Went midday')
+core.wait(1)
+// Skip intermediate days
+core.setDate("2022-10-09T06:59:59")
+core.debug('Went full moon day')
+core.wait(1)
+// Go to night
+waitForTime('2022-10-10T02:59:59', 20)
+core.debug('Went midnight')
+core.wait(1)
+core.setTimeRate(1)
+core.exit()
+
+

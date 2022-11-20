@@ -10,3 +10,7 @@
 StelMovementMgr.zoomTo(aimFov=199, zoomDuration=1)
 core.moveToAltAzi(alt=90 , azi=0,duration=1)
 core.setDate("2022-09-26T12:54:00")
+core.wait(1)
+core.exit()
+
+// TODO : Add overhead

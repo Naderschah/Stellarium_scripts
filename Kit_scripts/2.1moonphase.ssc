@@ -59,3 +59,4 @@ for (h = 0; h <= days*steps; h++)
     core.wait(time_in_s/14/steps)
 }
 //core.moveToSelectedObject(duration=0)
+core.exit()

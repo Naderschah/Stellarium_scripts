@@ -35,3 +35,4 @@ function durationSeconds(timeExpr)
 
 core.debug("Starting BortleScale Iteration")
 iterate_through(core.setBortleScaleIndex, core.getBortleScaleIndex(), 9, 100, 30)
+core.exit()
