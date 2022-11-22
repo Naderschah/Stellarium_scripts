@@ -23,11 +23,12 @@ function waitForTime(time, duration, add_day)
     date_fin = time.split('T')[0].split('-')
     time_fin = time.split('T')[1].split(':')
     date_start = core.getDate().split('T')[0].split('-')
-    time_start = core.getDate().split('T')[0].split(':')
+    time_start = core.getDate().split('T')[1].split(':')
 
     dt_start = new Date(date_start[0],date_start[1],date_start[2],time_start[0],time_start[1],time_start[2])
+    core.debug( Date(date_start[0],date_start[1],date_start[2],time_start[0],time_start[1],time_start[2]))
     dt_fin = new Date(date_fin[0],date_fin[1],date_fin[2],time_fin[0],time_fin[1],time_fin[2])
-    
+
     // Get time rate 
     time_to_wait = (dt_fin-dt_start)/1000
     time_rate = time_to_wait / duration
