@@ -45,11 +45,11 @@ function waitForTime(time, duration, add_day)
 }
 
 // Make midday
-waitForTime(core.getDate().split('T')[0]+'T06:59:59', 20, true)
+waitForTime(core.getDate().split('T')[0]+'T08:59:59', 20, true)
 core.debug('Went midday')
 core.wait(1)
 // Skip intermediate days
-core.setDate("2022-10-09T06:59:59")
+core.setDate("2022-10-09T08:59:59")
 core.debug('Went full moon day')
 core.wait(1)
 // Go to night

@@ -38,16 +38,18 @@ function waitForTime(time, duration, change_cond)
 }
 
 core.debug("- Starting Moonphase Iteration")
-core.debug("Remember to follow moon")
 LandscapeMgr.setFlagLandscape(false)
 LandscapeMgr.setFlagAtmosphere(false)
 core.wait(1)
 core.setMountMode("equatorial")
+core.selectObjectByName("Moon",pointer = false)
 // Focus on moon : Doesnt work in 0.18.2 
-// core.selectObjectByName("Moon",pointer = false)
 // core.moveToSelectedObject(duration=1)
+pos = core.getObjectInfo("Moon")
+core.moveToAltAzi(alt=pos.altitude, azi=pos.azimuth,duration=1)
 // StelMovementMgr.moveToObject("Moon",moveDuration = 1)
-// StelMovementMgr.zoomTo(aimFov=40.5, zoomDuration=1)
+StelMovementMgr.zoomTo(aimFov=40.5, zoomDuration=1)
+
 jd = core.getJDay()
 days = 14
 time_in_s = 28
@@ -55,6 +57,8 @@ steps = 1000
 for (h = 0; h <= days*steps; h++)
 {
     core.setJDay(jd + h/steps)
+    pos = core.getObjectInfo("Moon")
+    core.moveToRaDec(alt=pos.ra, azi=pos.dec,duration=time_in_s/2/14/steps)
     //core.moveToSelectedObject(duration=time_in_s/2/14/steps)
     core.wait(time_in_s/14/steps)
 }
