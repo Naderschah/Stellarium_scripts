@@ -23,7 +23,7 @@ When using windows, it is common that dpi scaling is applied to a 4k monitor (or
 All scripts are numbered corresponding to the script: https://docs.google.com/document/d/1D7bcYIPFADViwpuBraEPX0HGErIqfXNdv4RjZ2EIjL8/edit?skip_itp2_check=true
 
 Some events should be set to make switching easy --leave the ground off:
--- Event 1 : Full Moon M31
--- Event 2 : Half Moon M31
--- Event 3 : New Moon M31
--- Milky Way viewer
+-- Event 1 : Full Moon M31 -- Date : 2022 12 07 : 03 00 00 -- Halfway between M31 and heart :: Directly besides Pleiades
+-- Event 2 : Half Moon M31 -- Date : 2023 01 01 : 00 04 00 -- Close to all objects mentioned
+-- Event 3 : New Moon M31 -- Whenever : 2023 01 22 : 01 07 00
+-- Milky Way viewer from script

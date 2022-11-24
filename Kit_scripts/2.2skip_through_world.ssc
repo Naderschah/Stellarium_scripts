@@ -1,0 +1,23 @@
+//
+// Name: Skip through world
+// Author: Felix Semler
+// License: Public Domain
+// Version: 1.0
+// Description: Script that moves observer along the earth in 90/12 deg intervals while focusing on the moon from south pole to north
+//
+
+
+LandscapeMgr.setFlagLandscape(false)
+pos = core.getObjectInfo("Moon")
+core.moveToAltAzi(alt=pos.altitude, azi=pos.azimuth,duration=1)
+StelMovementMgr.zoomTo(aimFov=50, zoomDuration=1)
+
+for (i = 0; i < 12; i++)
+{
+    core.setObserverLocation(longitude= 0,latitude=i*90/12,altitude=0)
+    core.wait(3)
+    pos = core.getObjectInfo("Moon")
+    core.moveToAltAzi(alt=pos.altitude, azi=pos.azimuth,duration=1)
+}
+
+
