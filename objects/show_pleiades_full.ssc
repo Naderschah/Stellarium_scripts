@@ -1,0 +1,5 @@
+
+core.setDate("2022-12-07T03:00:00")
+pos = core.getObjectInfo("M45")
+core.moveToAltAzi(alt=pos.altitude, azi=pos.azimuth,duration=1)
+StelMovementMgr.zoomTo(aimFov=50, zoomDuration=1)
