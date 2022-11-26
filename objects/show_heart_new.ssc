@@ -1,4 +1,7 @@
 
+LandscapeMgr.setFlagAtmosphere(true)
+core.setMountMode("azimuthal")
+
 core.setDate("2023-01-22T00:00:00")
 pos = core.getObjectInfo("IC 1805")
 core.moveToAltAzi(alt=pos.altitude, azi=pos.azimuth,duration=1)
